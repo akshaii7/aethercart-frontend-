@@ -1,0 +1,136 @@
+
+
+.cart-container {
+  max-width: 75rem;
+  margin: 2.5rem auto;
+  padding: 1.25rem;
+}
+
+.cart-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 1.875rem;
+}
+
+.empty-cart {
+  text-align: center;
+  background: #fff;
+  padding: 3.75rem;
+  border-radius: 0.9375rem;
+  box-shadow: 0 0.625rem 1.875rem rgba(0,0,0,0.08);
+}
+
+.empty-cart h2 {
+  color: #666;
+  margin-bottom: 0.9375rem;
+}
+
+.empty-cart p {
+  color: #888;
+}
+
+.cart-wrapper {
+  display: grid;
+  grid-template-columns: 2fr 23.75rem;
+  gap: 1.875rem;
+}
+
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.cart-summary {
+  background: white;
+  border-radius: 1.125rem;
+  padding: 1.5625rem;
+  box-shadow: 0 0.5rem 1.5625rem rgba(0,0,0,.08);
+  position: sticky;
+  top: 1.5625rem;
+  height: fit-content;
+}
+
+.cart-summary h2 {
+  margin-bottom: 1.25rem;
+  color: #222;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.9375rem 0;
+  color: #555;
+  font-size: 1.0625rem;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 1.25rem 0;
+  padding-top: 1.25rem;
+  border-top: 0.125rem solid #eee;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #000;
+}
+
+.checkout-btn {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  background: #7eb2ff;
+  color: white;
+  font-size: 1.125rem;
+  border-radius: 0.625rem;
+  cursor: pointer;
+  transition: .3s;
+  margin-top: 0.9375rem;
+}
+
+.checkout-btn:hover {
+  background: #0b5ed7;
+  transform: translateY(-0.125rem);
+}
+
+.continue-btn {
+  width: 100%;
+  padding: 0.875rem;
+  margin-top: 0.75rem;
+  border: 0.125rem solid #0d6efd;
+  background: transparent;
+  color: #0d6efd;
+  border-radius: 0.625rem;
+  cursor: pointer;
+  font-size: 1.0625rem;
+  transition: .3s;
+}
+
+.continue-btn:hover {
+  background: #0d6efd;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .cart-container {
+    padding: 0.75rem;
+    margin: 1rem auto;
+  }
+
+  .cart-title {
+    font-size: 1.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .cart-wrapper {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .cart-summary {
+    position: static;
+    padding: 1.25rem;
+  }
+}
+
