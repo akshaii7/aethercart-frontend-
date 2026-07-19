@@ -1,8 +1,12 @@
 import { useState } from "react";
 import api from "../api/axios";
+import { BASE_URL } from "../config";
 
 export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
   const [isRegister, setIsRegister] = useState(false);
+  const [loginError, setLoginError] = useState("");
+  const [registerError, setRegisterError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [loginData, setLoginData] = useState({
     username: "",
@@ -18,6 +22,8 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
   });
 
   if (!isOpen) return null;
+
+  const clearErrors = () => { setLoginError(""); setRegisterError(""); };
 
   const handleLoginChange = (e) => {
     setLoginData({
@@ -35,39 +41,50 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
 
   const loginUser = () => {
     if (!loginData.username || !loginData.password) {
-      alert("Please enter username and password");
+      setLoginError("Please enter username and password");
       return;
     }
+    setLoginError("");
+    setLoading(true);
+
+    const targetUrl = `${BASE_URL}/api/accounts/token/`;
+    console.log("[Login] POSTing to:", targetUrl, "with username:", loginData.username);
 
     api
       .post("accounts/token/", loginData)
       .then((response) => {
+        console.log("[Login] Success!", response.status);
         localStorage.setItem("access", response.data.access);
         localStorage.setItem("refresh", response.data.refresh);
         localStorage.setItem("username", loginData.username);
-
-        alert("Login Successful");
-
-        if (onLoginSuccess) {
-          onLoginSuccess();
-        }
-
+        setLoading(false);
+        if (onLoginSuccess) onLoginSuccess();
         onClose();
       })
       .catch((error) => {
-        console.log("Login Error:", error.response?.data || error);
+        setLoading(false);
+        console.error("[Login] FULL ERROR:", error);
+        console.error("[Login] Response:", error.response);
+        console.error("[Login] Request URL:", error.config?.url);
+        console.error("[Login] Base URL:", error.config?.baseURL);
+        console.error("[Login] Full URL:", error.config?.baseURL + error.config?.url);
+        console.error("[Login] Status:", error.response?.status);
+        console.error("[Login] Data:", error.response?.data);
+
         if (error.response) {
           const status = error.response.status;
           const detail = error.response.data?.detail || error.response.data?.non_field_errors?.[0];
           if (status === 401 || status === 400) {
-            alert(detail || "Invalid username or password. Please check your credentials and try again.");
+            setLoginError(detail || "Invalid username or password. Check your credentials.");
           } else if (status === 405) {
-            alert("Server configuration error. Please try again in a moment.");
+            setLoginError(`405 Error — URL being called: ${error.config?.baseURL}${error.config?.url}`);
+          } else if (status === 403) {
+            setLoginError(`403 Forbidden — check CORS. URL: ${error.config?.baseURL}${error.config?.url}`);
           } else {
-            alert(`Login failed (${status}). Please try again.`);
+            setLoginError(`Login failed (${status}). URL: ${error.config?.baseURL}${error.config?.url}`);
           }
         } else {
-          alert("Cannot connect to server. Please check your internet connection and try again.");
+          setLoginError("Cannot connect to server. Check your internet connection.");
         }
       });
   };
@@ -75,31 +92,35 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
 
   const registerUser = () => {
     if (!registerData.username || !registerData.email || !registerData.password) {
-      alert("Username, email and password are required");
+      setRegisterError("Username, email and password are required");
       return;
     }
+    setRegisterError("");
+    setLoading(true);
 
     api
       .post("accounts/register/", registerData)
       .then(() => {
-        alert("Registration Successful. Please login now.");
+        setLoading(false);
         setIsRegister(false);
+        setLoginError("");
+        setLoginData({ username: registerData.username, password: "" });
+        setRegisterError("✅ Registration successful! Please login now.");
       })
       .catch((error) => {
-        console.log("Register Error:", error.response?.data || error);
-
+        setLoading(false);
+        console.error("Register Error:", error.response?.data || error);
         const data = error.response?.data;
         if (data) {
-          // Collect all field-level error messages from DRF
           const messages = Object.entries(data)
             .map(([field, msgs]) => {
               const msgList = Array.isArray(msgs) ? msgs.join(" ") : String(msgs);
               return `${field}: ${msgList}`;
             })
-            .join("\n");
-          alert("Registration failed:\n" + messages);
+            .join(" | ");
+          setRegisterError("Registration failed: " + messages);
         } else {
-          alert("Registration failed. Please check your connection and try again.");
+          setRegisterError("Registration failed. Please check your connection.");
         }
       });
   };
@@ -145,13 +166,17 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
                 autoComplete="current-password"
               />
 
-              <button type="submit" style={mainButton}>
-                Login
+              {loginError && (
+                <div style={errorStyle}>{loginError}</div>
+              )}
+
+              <button type="submit" style={mainButton} disabled={loading}>
+                {loading ? "Logging in..." : "Login"}
               </button>
 
               <p style={bottomText}>
                 New user?{" "}
-                <span onClick={() => setIsRegister(true)} style={linkStyle}>
+                <span onClick={() => { setIsRegister(true); clearErrors(); }} style={linkStyle}>
                   Register here
                 </span>
               </p>
@@ -213,13 +238,19 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
                 autoComplete="street-address"
               />
 
-              <button type="submit" style={mainButton}>
-                Register
+              {registerError && (
+                <div style={registerError.startsWith("✅") ? successStyle : errorStyle}>
+                  {registerError}
+                </div>
+              )}
+
+              <button type="submit" style={mainButton} disabled={loading}>
+                {loading ? "Registering..." : "Register"}
               </button>
 
               <p style={bottomText}>
                 Already registered?{" "}
-                <span onClick={() => setIsRegister(false)} style={linkStyle}>
+                <span onClick={() => { setIsRegister(false); clearErrors(); }} style={linkStyle}>
                   Login
                 </span>
               </p>
@@ -306,4 +337,25 @@ const linkStyle = {
   color: "#2874f0",
   fontWeight: "bold",
   cursor: "pointer",
+};
+
+const errorStyle = {
+  background: "#fff0f0",
+  border: "1px solid #ffcccc",
+  color: "#cc0000",
+  padding: "10px 14px",
+  borderRadius: "6px",
+  marginBottom: "12px",
+  fontSize: "13px",
+  wordBreak: "break-all",
+};
+
+const successStyle = {
+  background: "#f0fff4",
+  border: "1px solid #b7ebc0",
+  color: "#1a7a2e",
+  padding: "10px 14px",
+  borderRadius: "6px",
+  marginBottom: "12px",
+  fontSize: "13px",
 };
