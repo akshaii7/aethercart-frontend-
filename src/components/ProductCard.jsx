@@ -5,13 +5,9 @@ import "../styles/Products.css";
 
 export default function ProductCard({ product }) {
   const getImageUrl = (image) => {
-    if (!image) {
-      return "";
-    }
-    if (image.startsWith("http")) {
-      return image;
-    }
-    return `http://127.0.0.1:8000${image}`;
+    if (!image) return "https://via.placeholder.com/200";
+    if (image.startsWith("http")) return image;
+    return `https://aethercart-backend.onrender.com${image}`;
   };
 
   const handleAddToCart = (e) => {

@@ -95,11 +95,11 @@ return (
               {order.items.map((item) => (
                 <div key={item.id} className="order-product-card">
                   <img
-                    src={
-                      item.product_image.startsWith("http")
-                        ? item.product_image
-                        : `http://127.0.0.1:8000${item.product_image}`
-                    }
+                      src={
+                        item.product_image?.startsWith("http")
+                          ? item.product_image
+                          : `https://aethercart-backend.onrender.com${item.product_image}`
+                      }
                     alt={item.product_name}
                   />
 

@@ -56,7 +56,11 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
       })
       .catch((error) => {
         console.log("Login Error:", error.response?.data || error);
-        alert("Invalid username or password");
+        if (error.response) {
+          alert("Invalid username or password");
+        } else {
+          alert("Network error: Could not reach the server. Please check your connection.");
+        }
       });
   };
 

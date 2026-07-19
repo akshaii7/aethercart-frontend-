@@ -385,11 +385,11 @@ if (!buyNowProduct && cartItems.length === 0) {
         cartItems.map((item) => (
           <div key={item.id} className="checkout-summary-item">
             <img
-              src={
-                item.product_image.startsWith("http")
-                  ? item.product_image
-                  : `http://127.0.0.1:8000${item.product_image}`
-              }
+                  src={
+                    item.product_image.startsWith("http")
+                      ? item.product_image
+                      : `https://aethercart-backend.onrender.com${item.product_image}`
+                  }
               alt={item.product_name}
             />
 
@@ -403,11 +403,11 @@ if (!buyNowProduct && cartItems.length === 0) {
       ) : (
         <div className="checkout-summary-item">
           <img
-            src={
-              buyNowProduct.image.startsWith("http")
-                ? buyNowProduct.image
-                : `http://127.0.0.1:8000${buyNowProduct.image}`
-            }
+              src={
+                buyNowProduct.image.startsWith("http")
+                  ? buyNowProduct.image
+                  : `https://aethercart-backend.onrender.com${buyNowProduct.image}`
+              }
             alt={buyNowProduct.name}
           />
 

@@ -106,11 +106,11 @@ export default function Profile() {
       return data.profile_image_url;
     }
 
-    if (data.profile_image) {
+    if (data && data.profile_image) {
       if (data.profile_image.startsWith("http")) {
         return data.profile_image;
       }
-      return `http://127.0.0.1:8000${data.profile_image}`;
+      return `https://aethercart-backend.onrender.com${data.profile_image}`;
     }
 
     return "";
