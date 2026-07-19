@@ -59,12 +59,22 @@ export default function Layout({ children }) {
     api
       .get("notifications/notifications/")
       .then((response) => {
-        setNotificationCount(response.data.length);
+        const data = response.data;
+        if (Array.isArray(data)) {
+          setNotificationCount(data.length);
+        } else if (data && typeof data.count === "number") {
+          setNotificationCount(data.count);
+        } else if (data && Array.isArray(data.results)) {
+          setNotificationCount(data.results.length);
+        } else {
+          setNotificationCount(0);
+        }
       })
       .catch(() => {
         setNotificationCount(0);
       });
   }, [location.pathname]);
+
 
   return (
     <div className="dashboard-layout">

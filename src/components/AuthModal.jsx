@@ -57,12 +57,21 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
       .catch((error) => {
         console.log("Login Error:", error.response?.data || error);
         if (error.response) {
-          alert("Invalid username or password");
+          const status = error.response.status;
+          const detail = error.response.data?.detail || error.response.data?.non_field_errors?.[0];
+          if (status === 401 || status === 400) {
+            alert(detail || "Invalid username or password. Please check your credentials and try again.");
+          } else if (status === 405) {
+            alert("Server configuration error. Please try again in a moment.");
+          } else {
+            alert(`Login failed (${status}). Please try again.`);
+          }
         } else {
-          alert("Network error: Could not reach the server. Please check your connection.");
+          alert("Cannot connect to server. Please check your internet connection and try again.");
         }
       });
   };
+
 
   const registerUser = () => {
     if (!registerData.username || !registerData.email || !registerData.password) {

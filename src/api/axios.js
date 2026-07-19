@@ -15,25 +15,34 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+const clearAuth = () => {
+  localStorage.removeItem("access");
+  localStorage.removeItem("refresh");
+  localStorage.removeItem("username");
+};
+
 api.interceptors.response.use(
   (response) => response,
 
   async (error) => {
     const originalRequest = error.config;
 
+    // Don't retry on auth endpoints to avoid infinite loops
+    const isAuthEndpoint =
+      originalRequest?.url?.includes("token/") ||
+      originalRequest?.url?.includes("register/");
+
     if (
       error.response?.status === 401 &&
-      error.response?.data?.code === "token_not_valid" &&
-      !originalRequest._retry
+      !originalRequest._retry &&
+      !isAuthEndpoint
     ) {
       originalRequest._retry = true;
 
       const refreshToken = localStorage.getItem("refresh");
 
       if (!refreshToken) {
-        localStorage.removeItem("access");
-        localStorage.removeItem("refresh");
-        localStorage.removeItem("username");
+        clearAuth();
         return Promise.reject(error);
       }
 
@@ -51,10 +60,7 @@ api.interceptors.response.use(
 
         return api(originalRequest);
       } catch (refreshError) {
-        localStorage.removeItem("access");
-        localStorage.removeItem("refresh");
-        localStorage.removeItem("username");
-
+        clearAuth();
         return Promise.reject(refreshError);
       }
     }

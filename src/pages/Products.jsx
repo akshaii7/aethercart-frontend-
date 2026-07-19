@@ -27,10 +27,20 @@ export default function Products() {
     api
       .get("products/products/")
       .then((response) => {
-        setProducts(response.data);
+        // DRF may return paginated data: { count, results, next, previous }
+        // or a plain array — handle both cases
+        const data = response.data;
+        if (Array.isArray(data)) {
+          setProducts(data);
+        } else if (data && Array.isArray(data.results)) {
+          setProducts(data.results);
+        } else {
+          setProducts([]);
+        }
       })
       .catch((error) => {
         console.log(error);
+        setProducts([]);
       });
   }, []);
 
