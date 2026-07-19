@@ -1,4 +1,5 @@
 
+import { getImageUrl } from "../config";
 import "../styles/CartItem.css";
 
 export default function CartItem({ item, removeCartItem }) {
@@ -6,13 +7,10 @@ export default function CartItem({ item, removeCartItem }) {
     <div className="cart-card">
 
       <div className="cart-image">
-      {item.product_image && (
         <img
-          src={item.product_image}
+          src={getImageUrl(item.product_image)}
           alt={item.product_name}
-         
         />
-      )}
       </div>
 
          <div className="cart-details">
