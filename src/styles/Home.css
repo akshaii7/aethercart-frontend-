@@ -330,6 +330,8 @@ a{
 @media (max-width: 768px) {
   .topbar {
     padding-left: 0 !important;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
   }
 
   .hero {
@@ -383,9 +385,5 @@ a{
 @media (max-width: 480px) {
   .hero h1 {
     font-size: 1.875rem;
-  }
-
-  .hero-features {
-    grid-template-columns: 1fr;
   }
 }
