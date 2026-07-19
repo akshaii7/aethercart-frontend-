@@ -183,7 +183,7 @@ a {
 
 
 .hero {
-  background: white;
+  background: rgb(68, 227, 126);
 
   border-radius: 1.5rem;
 
@@ -201,7 +201,7 @@ a {
 
   box-shadow: var(--shadow);
 
-  margin-bottom: 1.75rem;
+  margin-bottom: 2.75rem;
 }
 
 .hero-content {
@@ -238,7 +238,7 @@ a {
 }
 
 .hero h1 span {
-  color: #97b9f2;
+  color: #ffffff;
 }
 
 .hero p {
