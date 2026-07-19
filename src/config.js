@@ -1,4 +1,4 @@
-export const BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+export const BASE_URL = import.meta.env.VITE_API_URL || "https://aethercart-backend.onrender.com";
 
 // GitHub raw CDN: images committed to the backend repo are served from here
 // Render's free tier doesn't serve /media/ files reliably, but GitHub does
