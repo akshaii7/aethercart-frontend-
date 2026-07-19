@@ -103,10 +103,9 @@ export default function Profile() {
   }, [isLoggedIn]);
 
   const getProfileImageUrl = (data) => {
-    if (data && data.profile_image_url) {
-      return data.profile_image_url;
-    }
-    return getImageUrl(data?.profile_image);
+    // Always pass through getImageUrl so Render /media/ URLs get rewritten to GitHub CDN
+    const raw = data?.profile_image_url || data?.profile_image;
+    return getImageUrl(raw);
   };
 
   const fetchProfile = () => {
