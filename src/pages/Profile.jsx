@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
 import AuthModal from "../components/AuthModal";
+import { getImageUrl } from "../config";
 import "../styles/profile.css";
 import {
   Mail,
@@ -101,19 +102,11 @@ export default function Profile() {
     }
   }, [isLoggedIn]);
 
-  const getImageUrl = (data) => {
-    if (data.profile_image_url) {
+  const getProfileImageUrl = (data) => {
+    if (data && data.profile_image_url) {
       return data.profile_image_url;
     }
-
-    if (data && data.profile_image) {
-      if (data.profile_image.startsWith("http")) {
-        return data.profile_image;
-      }
-      return `https://aethercart-backend.onrender.com${data.profile_image}`;
-    }
-
-    return "";
+    return getImageUrl(data?.profile_image);
   };
 
   const fetchProfile = () => {
@@ -150,7 +143,7 @@ export default function Profile() {
           return;
         }
 
-        const imageUrl = getImageUrl(currentProfile);
+        const imageUrl = getProfileImageUrl(currentProfile);
 
         setProfileId(currentProfile.id);
 
@@ -249,7 +242,7 @@ export default function Profile() {
       })
       .then((response) => {
         const data = response.data;
-        const imageUrl = getImageUrl(data);
+        const imageUrl = getProfileImageUrl(data);
 
         setProfile({
           name: data.name || "",

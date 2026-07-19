@@ -1,7 +1,8 @@
 import axios from "axios";
+import { BASE_URL } from "../config";
 
 const api = axios.create({
-  baseURL: "https://aethercart-backend.onrender.com/api/"
+  baseURL: `${BASE_URL}/api/`
 });
 
 api.interceptors.request.use((config) => {
@@ -38,7 +39,7 @@ api.interceptors.response.use(
 
       try {
         const response = await axios.post(
-          "https://aethercart-backend.onrender.com/api/accounts/token/refresh/",
+          `${BASE_URL}/api/accounts/token/refresh/`,
           {
             refresh: refreshToken,
           }

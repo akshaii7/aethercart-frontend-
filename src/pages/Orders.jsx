@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
+import { getImageUrl } from "../config";
 import "../styles/Orders.css";
 
 export default function Orders() {
@@ -95,11 +96,7 @@ return (
               {order.items.map((item) => (
                 <div key={item.id} className="order-product-card">
                   <img
-                      src={
-                        item.product_image?.startsWith("http")
-                          ? item.product_image
-                          : `https://aethercart-backend.onrender.com${item.product_image}`
-                      }
+                    src={getImageUrl(item.product_image)}
                     alt={item.product_name}
                   />
 

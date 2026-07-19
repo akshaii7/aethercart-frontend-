@@ -1,14 +1,10 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, ShoppingCart } from "lucide-react";
 import api from "../api/axios";
+import { getImageUrl } from "../config";
 import "../styles/Products.css";
 
 export default function ProductCard({ product }) {
-  const getImageUrl = (image) => {
-    if (!image) return "https://via.placeholder.com/200";
-    if (image.startsWith("http")) return image;
-    return `https://aethercart-backend.onrender.com${image}`;
-  };
 
   const handleAddToCart = (e) => {
     e.preventDefault();

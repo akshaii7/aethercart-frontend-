@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import api from "../api/axios";
 import ReviewForm from "../components/ReviewForm";
 import ReviewList from "../components/ReviewList";
+import { getImageUrl } from "../config";
 import "../styles/ProductDetails.css";
 
 export default function ProductDetails() {
@@ -17,11 +18,6 @@ export default function ProductDetails() {
     fetchProduct();
   }, [id]);
 
-  const getImageUrl = (image) => {
-    if (!image) return "https://via.placeholder.com/400";
-    if (image.startsWith("http")) return image;
-    return `https://aethercart-backend.onrender.com${image}`;
-  };
 
   const fetchProduct = () => {
     api
