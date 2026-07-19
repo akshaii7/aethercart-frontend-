@@ -183,7 +183,7 @@ a {
 
 
 .hero {
-  background: rgb(68, 227, 126);
+  background: #093A2F;
 
   border-radius: 1.5rem;
 
@@ -242,7 +242,7 @@ a {
 }
 
 .hero p {
-  color: #666;
+  color: #9f9f9f;
   font-size: 1.2rem;
   line-height: 1.75;
   margin-bottom: 2.5rem;
