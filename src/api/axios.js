@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://127.0.0.1:8000/api/",
+  baseURL: "https://aethercart-backend.onrender.com/api/"
 });
 
 api.interceptors.request.use((config) => {
@@ -38,7 +38,7 @@ api.interceptors.response.use(
 
       try {
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/accounts/token/refresh/",
+          "https://aethercart-backend.onrender.com/api/accounts/token/refresh/",
           {
             refresh: refreshToken,
           }
