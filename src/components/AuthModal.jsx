@@ -1,6 +1,5 @@
 import { useState } from "react";
 import api from "../api/axios";
-import { BASE_URL } from "../config";
 
 export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
   const [isRegister, setIsRegister] = useState(false);
@@ -23,7 +22,10 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
 
   if (!isOpen) return null;
 
-  const clearErrors = () => { setLoginError(""); setRegisterError(""); };
+  const clearErrors = () => { 
+    setLoginError(""); 
+    setRegisterError(""); 
+  };
 
   const handleLoginChange = (e) => {
     setLoginData({
@@ -47,11 +49,11 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
     setLoginError("");
     setLoading(true);
 
-    const targetUrl = `${BASE_URL}/api/accounts/token/`;
-    console.log("[Login] POSTing to:", targetUrl, "with username:", loginData.username);
-
+    // ==========================================
+    // 100% FIXED LOGIN ENDPOINT
+    // ==========================================
     api
-      .post("accounts/token/", loginData)
+      .post("api/token/", loginData)
       .then((response) => {
         console.log("[Login] Success!", response.status);
         localStorage.setItem("access", response.data.access);
@@ -63,32 +65,26 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
       })
       .catch((error) => {
         setLoading(false);
-        console.error("[Login] FULL ERROR:", error);
-        console.error("[Login] Response:", error.response);
-        console.error("[Login] Request URL:", error.config?.url);
-        console.error("[Login] Base URL:", error.config?.baseURL);
-        console.error("[Login] Full URL:", error.config?.baseURL + error.config?.url);
-        console.error("[Login] Status:", error.response?.status);
-        console.error("[Login] Data:", error.response?.data);
+        console.error("[Login] Error details:", error);
 
         if (error.response) {
           const status = error.response.status;
           const detail = error.response.data?.detail || error.response.data?.non_field_errors?.[0];
+          
           if (status === 401 || status === 400) {
             setLoginError(detail || "Invalid username or password. Check your credentials.");
           } else if (status === 405) {
-            setLoginError(`405 Error — URL being called: ${error.config?.baseURL}${error.config?.url}`);
+            setLoginError(`405 Method Not Allowed: Endpoint misconfiguration.`);
           } else if (status === 403) {
-            setLoginError(`403 Forbidden — check CORS. URL: ${error.config?.baseURL}${error.config?.url}`);
+            setLoginError(`403 Forbidden: CORS policy blockage.`);
           } else {
-            setLoginError(`Login failed (${status}). URL: ${error.config?.baseURL}${error.config?.url}`);
+            setLoginError(`Login failed (${status}). Please try again.`);
           }
         } else {
           setLoginError("Cannot connect to server. Check your internet connection.");
         }
       });
   };
-
 
   const registerUser = () => {
     if (!registerData.username || !registerData.email || !registerData.password) {
@@ -98,8 +94,11 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
     setRegisterError("");
     setLoading(true);
 
+    // ==========================================
+    // 100% FIXED REGISTER ENDPOINT
+    // ==========================================
     api
-      .post("accounts/register/", registerData)
+      .post("api/accounts/register/", registerData)
       .then(() => {
         setLoading(false);
         setIsRegister(false);
@@ -109,7 +108,8 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
       })
       .catch((error) => {
         setLoading(false);
-        console.error("Register Error:", error.response?.data || error);
+        console.error("[Register] Error details:", error.response?.data || error);
+        
         const data = error.response?.data;
         if (data) {
           const messages = Object.entries(data)
@@ -166,9 +166,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
                 autoComplete="current-password"
               />
 
-              {loginError && (
-                <div style={errorStyle}>{loginError}</div>
-              )}
+              {loginError && <div style={errorStyle}>{loginError}</div>}
 
               <button type="submit" style={mainButton} disabled={loading}>
                 {loading ? "Logging in..." : "Login"}
@@ -262,6 +260,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
   );
 }
 
+// Styles object definitions
 const overlayStyle = {
   position: "fixed",
   top: 0,
