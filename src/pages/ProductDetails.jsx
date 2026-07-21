@@ -14,10 +14,17 @@ export default function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
   const [reviewRefresh, setReviewRefresh] = useState(0);
 
+  // 🔒 Redirect unauthenticated users immediately upon opening the page
   useEffect(() => {
-    fetchProduct();
-  }, [id]);
+    const token = localStorage.getItem("access");
 
+    if (!token) {
+      navigate("/login", { state: { from: `/products/${id}` } });
+      return;
+    }
+
+    fetchProduct();
+  }, [id, navigate]);
 
   const fetchProduct = () => {
     api
@@ -39,7 +46,6 @@ export default function ProductDetails() {
       if (prev > 1) {
         return prev - 1;
       }
-
       return 1;
     });
   };
@@ -48,7 +54,7 @@ export default function ProductDetails() {
     const token = localStorage.getItem("access");
 
     if (!token) {
-      alert("Please login first");
+      navigate("/login", { state: { from: `/products/${id}` } });
       return;
     }
 
@@ -71,7 +77,7 @@ export default function ProductDetails() {
     const token = localStorage.getItem("access");
 
     if (!token) {
-      alert("Please login first");
+      navigate("/login", { state: { from: `/products/${id}` } });
       return;
     }
 
