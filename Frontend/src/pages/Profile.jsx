@@ -98,17 +98,19 @@ export default function Profile() {
       fetchProfile();
       fetchOrders();
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn]);
 
-  const getProfileImageUrl = (data) => {
+  function getProfileImageUrl(data) {
     // Always pass through getImageUrl so Render /media/ URLs get rewritten to GitHub CDN
     const raw = data?.profile_image_url || data?.profile_image;
     return getImageUrl(raw);
-  };
+  }
 
-  const fetchProfile = () => {
+  function fetchProfile() {
     const token = localStorage.getItem("access");
     const usernameFromStorage = localStorage.getItem("username");
 
@@ -123,7 +125,7 @@ export default function Profile() {
     api
       .get("accounts/profiles/")
       .then((response) => {
-        let currentProfile = null;
+        let currentProfile;
 
         if (Array.isArray(response.data)) {
           currentProfile =
@@ -182,7 +184,7 @@ export default function Profile() {
       });
   };
 
-  const fetchOrders = () => {
+  function fetchOrders() {
     api
       .get("orders/orders/")
       .then((res) => {
@@ -395,8 +397,8 @@ export default function Profile() {
       try {
         const date = new Date(profile.created_at);
         return `Joined on ${date.toLocaleString("default", { month: "short" })} ${date.getFullYear()}`;
-      } catch (e) {
-        // ignore
+      } catch (error) {
+        console.error(error);
       }
     }
     return "Joined on Jan 2024";
@@ -444,7 +446,8 @@ export default function Profile() {
       if (diffDays === 0) return "Today";
       if (diffDays === 1) return "Yesterday";
       return `${diffDays} days ago`;
-    } catch (e) {
+    } catch (error) {
+      console.error(error);
       return "Recently";
     }
   };

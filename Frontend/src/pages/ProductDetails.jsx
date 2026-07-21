@@ -14,16 +14,10 @@ export default function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
   const [reviewRefresh, setReviewRefresh] = useState(0);
 
-  // 🔒 Redirect unauthenticated users immediately upon opening the page
+  // 🔓 Allow unauthenticated users to view the page, but redirect on action
   useEffect(() => {
-    const token = localStorage.getItem("access");
-
-    if (!token) {
-      navigate("/login", { state: { from: `/products/${id}` } });
-      return;
-    }
-
     fetchProduct();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, navigate]);
 
   const fetchProduct = () => {
