@@ -60,8 +60,8 @@ export default function Profile() {
     if (saved) {
       try {
         return JSON.parse(saved);
-      } catch (e) {
-        // ignore
+      } catch (error) {
+        console.error(error);
       }
     }
     return [
@@ -93,22 +93,43 @@ export default function Profile() {
   // Recent orders list
   const [recentOrders, setRecentOrders] = useState([]);
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      fetchProfile();
-      fetchOrders();
-    } else {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setLoading(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoggedIn]);
+
 
   function getProfileImageUrl(data) {
     // Always pass through getImageUrl so Render /media/ URLs get rewritten to GitHub CDN
     const raw = data?.profile_image_url || data?.profile_image;
     return getImageUrl(raw);
   }
+
+  const logoutWithoutAlert = () => {
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    localStorage.removeItem("username");
+    localStorage.removeItem("profileId");
+    localStorage.removeItem("profile_username");
+    localStorage.removeItem("profile_dob");
+    localStorage.removeItem("profile_gender");
+
+    setIsLoggedIn(false);
+    setIsEditing(false);
+    setProfileId(null);
+    setProfileImage(null);
+    setPreviewImage("");
+
+    setProfile({
+      name: "",
+      email: "",
+      phone: "",
+      address: "",
+      profile_image_url: "",
+      created_at: "",
+    });
+  };
+
+  const logout = () => {
+    logoutWithoutAlert();
+    alert("Logged out successfully");
+  };
 
   function fetchProfile() {
     const token = localStorage.getItem("access");
@@ -199,6 +220,17 @@ export default function Profile() {
       });
   };
 
+  useEffect(() => {
+    if (isLoggedIn) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      fetchProfile();
+      fetchOrders();
+    } else {
+      setLoading(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoggedIn]);
+
   const handleChange = (e) => {
     if (!isEditing) return;
 
@@ -285,35 +317,6 @@ export default function Profile() {
     fetchProfile();
   };
 
-  const logoutWithoutAlert = () => {
-    localStorage.removeItem("access");
-    localStorage.removeItem("refresh");
-    localStorage.removeItem("username");
-    localStorage.removeItem("profileId");
-    localStorage.removeItem("profile_username");
-    localStorage.removeItem("profile_dob");
-    localStorage.removeItem("profile_gender");
-
-    setIsLoggedIn(false);
-    setIsEditing(false);
-    setProfileId(null);
-    setProfileImage(null);
-    setPreviewImage("");
-
-    setProfile({
-      name: "",
-      email: "",
-      phone: "",
-      address: "",
-      profile_image_url: "",
-      created_at: "",
-    });
-  };
-
-  const logout = () => {
-    logoutWithoutAlert();
-    alert("Logged out successfully");
-  };
 
   const handleLoginSuccess = () => {
     setShowAuthModal(false);

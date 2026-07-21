@@ -4,9 +4,7 @@ import api from "../api/axios";
 export default function ReviewList({ productId, refreshKey }) {
   const [reviews, setReviews] = useState([]);
 
-  useEffect(() => {
-    fetchReviews();
-  }, [productId, refreshKey]);
+
 
   const fetchReviews = () => {
     api
@@ -18,6 +16,11 @@ export default function ReviewList({ productId, refreshKey }) {
         console.log("Review List Error:", error.response?.data || error);
       });
   };
+
+  useEffect(() => {
+    fetchReviews();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [productId, refreshKey]);
 
   if (reviews.length === 0) {
     return <p style={emptyText}>No reviews yet.</p>;

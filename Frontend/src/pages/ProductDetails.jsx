@@ -14,11 +14,7 @@ export default function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
   const [reviewRefresh, setReviewRefresh] = useState(0);
 
-  // 🔓 Allow unauthenticated users to view the page, but redirect on action
-  useEffect(() => {
-    fetchProduct();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, navigate]);
+
 
   const fetchProduct = () => {
     api
@@ -30,6 +26,12 @@ export default function ProductDetails() {
         console.log("Product Details Error:", error.response?.data || error);
       });
   };
+
+  // 🔓 Allow unauthenticated users to view the page, but redirect on action
+  useEffect(() => {
+    fetchProduct();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, navigate]);
 
   const increaseQuantity = () => {
     setQuantity((prev) => prev + 1);

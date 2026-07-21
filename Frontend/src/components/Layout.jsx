@@ -52,6 +52,7 @@ export default function Layout({ children }) {
     const token = localStorage.getItem("access");
 
     if (!token) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setNotificationCount(0);
       return;
     }
