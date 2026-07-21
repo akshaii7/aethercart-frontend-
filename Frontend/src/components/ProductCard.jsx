@@ -7,7 +7,7 @@ import "../styles/Products.css";
 export default function ProductCard({ product }) {
   const navigate = useNavigate();
 
-  // 🔒 1. Redirect unauthenticated users when clicking "View Details"
+  // 🔒 1. Redirect unauthenticated users when clicking "View Details" (Link)
   const handleProductClick = (e) => {
     const token = localStorage.getItem("access");
 
@@ -18,7 +18,24 @@ export default function ProductCard({ product }) {
     }
   };
 
-  // 🔒 2. Redirect unauthenticated users when clicking "Add to Cart"
+  // 🔒 2. Handle clicking anywhere on the product card
+  const handleCardClick = (e) => {
+    // If they clicked on a link or button inside the card, don't handle it here to prevent double events
+    if (e.target.closest('a') || e.target.closest('button')) {
+      return;
+    }
+
+    const token = localStorage.getItem("access");
+    if (!token) {
+      e.preventDefault();
+      e.stopPropagation();
+      navigate("/login", { state: { from: `/products/${product.id}` } });
+    } else {
+      navigate(`/products/${product.id}`);
+    }
+  };
+
+  // 🔒 3. Redirect unauthenticated users when clicking "Add to Cart"
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -45,7 +62,7 @@ export default function ProductCard({ product }) {
   };
 
   return (
-    <div className="product-card" onClick={handleProductClick}>
+    <div className="product-card" onClick={handleCardClick} style={{ cursor: "pointer" }}>
       {product.image && (
         <div className="product-card-image-wrapper">
           <img
