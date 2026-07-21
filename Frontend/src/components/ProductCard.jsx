@@ -25,8 +25,9 @@ export default function ProductCard({ product }) {
     const token = localStorage.getItem("access");
 
     if (!token) {
+      alert("Please login first");
       // Redirect directly to login page
-      navigate("/login", { state: { from: `/products/${product.id}` } });
+      navigate("/profile", { state: { from: `/products/${product.id}` } });
       return;
     }
 

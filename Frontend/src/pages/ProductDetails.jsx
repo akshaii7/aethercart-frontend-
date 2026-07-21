@@ -50,7 +50,8 @@ export default function ProductDetails() {
     const token = localStorage.getItem("access");
 
     if (!token) {
-      navigate("/login", { state: { from: `/products/${id}` } });
+      alert("Please login first");
+      navigate("/profile", { state: { from: `/products/${id}` } });
       return;
     }
 
@@ -73,7 +74,8 @@ export default function ProductDetails() {
     const token = localStorage.getItem("access");
 
     if (!token) {
-      navigate("/login", { state: { from: `/products/${id}` } });
+      alert("Please login first");
+      navigate("/profile", { state: { from: `/products/${id}` } });
       return;
     }
 
