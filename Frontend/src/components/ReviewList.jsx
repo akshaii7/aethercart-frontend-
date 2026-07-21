@@ -1,6 +1,35 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 
+const reviewCard = {
+  padding: "18px 0",
+  borderBottom: "1px solid #ccc",
+};
+
+const customerName = {
+  fontSize: "18px",
+  fontWeight: "900",
+  marginBottom: "10px",
+  color: "#111",
+};
+
+const ratingText = {
+  fontSize: "16px",
+  marginBottom: "10px",
+  color: "#111",
+};
+
+const commentText = {
+  fontSize: "16px",
+  lineHeight: "1.5",
+  color: "#222",
+};
+
+const emptyText = {
+  fontSize: "16px",
+  color: "#555",
+};
+
 export default function ReviewList({ productId, refreshKey }) {
   const [reviews, setReviews] = useState([]);
 
@@ -46,32 +75,3 @@ export default function ReviewList({ productId, refreshKey }) {
     </div>
   );
 }
-
-const reviewCard = {
-  padding: "18px 0",
-  borderBottom: "1px solid #ccc",
-};
-
-const customerName = {
-  fontSize: "18px",
-  fontWeight: "900",
-  marginBottom: "10px",
-  color: "#111",
-};
-
-const ratingText = {
-  fontSize: "16px",
-  marginBottom: "10px",
-  color: "#111",
-};
-
-const commentText = {
-  fontSize: "16px",
-  lineHeight: "1.5",
-  color: "#222",
-};
-
-const emptyText = {
-  fontSize: "16px",
-  color: "#555",
-};
