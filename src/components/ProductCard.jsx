@@ -7,8 +7,7 @@ import "../styles/Products.css";
 export default function ProductCard({ product }) {
   const navigate = useNavigate();
 
-
-  // 🔓 2. Handle clicking anywhere on the product card (allows unauthenticated users)
+  // 🔓 Handle clicking anywhere on the product card (allows unauthenticated users)
   const handleCardClick = (e) => {
     // If they clicked on a link or button inside the card, don't handle it here to prevent double events
     if (e.target.closest('a') || e.target.closest('button')) {
@@ -18,7 +17,7 @@ export default function ProductCard({ product }) {
     navigate(`/products/${product.id}`);
   };
 
-  // 🔒 3. Redirect unauthenticated users when clicking "Add to Cart"
+  // 🔒 Redirect unauthenticated users when clicking "Add to Cart"
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -47,29 +46,31 @@ export default function ProductCard({ product }) {
 
   return (
     <div className="product-card" onClick={handleCardClick} style={{ cursor: "pointer" }}>
-      {product.image && (
-        <div className="product-card-image-wrapper">
-          <img
-            src={getImageUrl(product.image)}
-            alt={product.name}
-            className="product-card-image"
-          />
-        </div>
-      )}
+      <div className="product-card-image-wrapper">
+        <img
+          src={getImageUrl(product?.image)}
+          alt={product?.name || "Product Image"}
+          className="product-card-image"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "https://via.placeholder.com/300?text=No+Image";
+          }}
+        />
+      </div>
 
       <div className="product-card-info">
-        <h3 className="product-card-title">{product.name}</h3>
+        <h3 className="product-card-title">{product?.name}</h3>
         <div className="product-card-price">
-          ₹{Number(product.price).toFixed(2)}
+          ₹{Number(product?.price || 0).toFixed(2)}
         </div>
         <p className="product-card-description">
-          {product.description ||
+          {product?.description ||
             "Premium quality product tailored to your lifestyle."}
         </p>
 
         <div className="product-card-footer">
           <Link
-            to={`/products/${product.id}`}
+            to={`/products/${product?.id}`}
             className="product-card-details-btn"
           >
             View Details

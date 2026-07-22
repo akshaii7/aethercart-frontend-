@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../api/axios";
+import { getImageUrl } from "../config";
 import ReviewForm from "../components/ReviewForm";
 import ReviewList from "../components/ReviewList";
 import "../styles/ProductDetails.css";
@@ -96,25 +97,19 @@ export default function ProductDetails() {
     );
   }
 
-  // Handle Cloudinary or direct image URL correctly
-  const imageUrl =
-    product.image?.startsWith("http://") || product.image?.startsWith("https://")
-      ? product.image
-      : `https://aethercart-backend.onrender.com${product.image}`;
-
   return (
     <div className="product-details-container">
       <div className="product-details-card">
         <div className="product-details-image-section">
-          {product.image ? (
-            <img
-              src={imageUrl}
-              alt={product.name}
-              className="product-details-image"
-            />
-          ) : (
-            <div className="product-details-no-image">No Image</div>
-          )}
+          <img
+            src={getImageUrl(product?.image)}
+            alt={product?.name || "Product Image"}
+            className="product-details-image"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "https://via.placeholder.com/500?text=No+Image";
+            }}
+          />
         </div>
 
         <div className="product-details-info-section">
