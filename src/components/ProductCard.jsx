@@ -4,6 +4,8 @@ import api from "../api/axios";
 import { getImageUrl } from "../config";
 import "../styles/Products.css";
 
+const FALLBACK_IMAGE = "https://placehold.co/600x400/e2e8f0/1e293b.png?text=No+Image";
+
 export default function ProductCard({ product }) {
   const navigate = useNavigate();
 
@@ -39,8 +41,6 @@ export default function ProductCard({ product }) {
       });
   };
 
-  const fallbackImage = "https://via.placeholder.com/300?text=No+Image";
-
   return (
     <div className="product-card" onClick={handleCardClick} style={{ cursor: "pointer" }}>
       <div className="product-card-image-wrapper">
@@ -49,8 +49,8 @@ export default function ProductCard({ product }) {
           alt={product?.name || "Product Image"}
           className="product-card-image"
           onError={(e) => {
-            e.currentTarget.onerror = null; // prevents looping
-            e.currentTarget.src = fallbackImage;
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = FALLBACK_IMAGE;
           }}
         />
       </div>
