@@ -53,7 +53,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
     // 100% FIXED LOGIN ENDPOINT (Matches Backend Logs)
     // ==========================================
     api
-      .post("api/accounts/token/", loginData)
+      .post("accounts/token/", loginData)
       .then((response) => {
         console.log("[Login] Success!", response.status);
         localStorage.setItem("access", response.data.access);
@@ -95,7 +95,7 @@ export default function AuthModal({ isOpen, onClose, onLoginSuccess }) {
     setLoading(true);
 
     api
-      .post("api/accounts/register/", registerData)
+      .post("accounts/register/", registerData)
       .then(() => {
         setLoading(false);
         setIsRegister(false);

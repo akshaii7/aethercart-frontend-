@@ -14,7 +14,7 @@ const CLEANED_BASE_URL = (BASE_URL || "https://aethercart-backend.onrender.com")
   .replace(/\/$/, "");
 
 const api = axios.create({
-  baseURL: `${CLEANED_BASE_URL}/`,
+  baseURL: `${CLEANED_BASE_URL}/api/`,
 });
 
 api.interceptors.request.use((config) => {

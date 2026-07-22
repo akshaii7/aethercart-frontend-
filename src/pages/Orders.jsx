@@ -9,9 +9,7 @@ export default function Orders() {
 
   const [orders, setOrders] = useState([]);
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
+
 
   const fetchOrders = () => {
     const token = localStorage.getItem("access");
@@ -50,6 +48,11 @@ export default function Orders() {
     });
 };
 
+  useEffect(() => {
+    fetchOrders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   if (!localStorage.getItem("access")) {
     return (
       <div style={{ padding: "1.25rem" }}>
@@ -59,8 +62,8 @@ export default function Orders() {
     );
   }
 
-return (
-  <div className="orders-page">
+  return (
+    <div className="orders-page">
     <h1 className="orders-title">My Orders</h1>
 
     {orders.length === 0 ? (

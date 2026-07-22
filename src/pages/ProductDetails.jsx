@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import api from "../api/axios";
 import ReviewForm from "../components/ReviewForm";
 import ReviewList from "../components/ReviewList";
-import { getImageUrl } from "../config";
 import "../styles/ProductDetails.css";
 
 export default function ProductDetails() {
@@ -13,18 +12,6 @@ export default function ProductDetails() {
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [reviewRefresh, setReviewRefresh] = useState(0);
-
-  // 🔒 Redirect unauthenticated users immediately upon opening the page
-  useEffect(() => {
-    const token = localStorage.getItem("access");
-
-    if (!token) {
-      navigate("/login", { state: { from: `/products/${id}` } });
-      return;
-    }
-
-    fetchProduct();
-  }, [id, navigate]);
 
   const fetchProduct = () => {
     api
@@ -36,6 +23,12 @@ export default function ProductDetails() {
         console.log("Product Details Error:", error.response?.data || error);
       });
   };
+
+  // 🔓 Allow unauthenticated users to view the page, but redirect on action
+  useEffect(() => {
+    fetchProduct();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, navigate]);
 
   const increaseQuantity = () => {
     setQuantity((prev) => prev + 1);
@@ -54,7 +47,8 @@ export default function ProductDetails() {
     const token = localStorage.getItem("access");
 
     if (!token) {
-      navigate("/login", { state: { from: `/products/${id}` } });
+      alert("Please login first");
+      navigate("/profile", { state: { from: `/products/${id}` } });
       return;
     }
 
@@ -77,7 +71,8 @@ export default function ProductDetails() {
     const token = localStorage.getItem("access");
 
     if (!token) {
-      navigate("/login", { state: { from: `/products/${id}` } });
+      alert("Please login first");
+      navigate("/profile", { state: { from: `/products/${id}` } });
       return;
     }
 
@@ -101,13 +96,19 @@ export default function ProductDetails() {
     );
   }
 
+  // Handle Cloudinary or direct image URL correctly
+  const imageUrl =
+    product.image?.startsWith("http://") || product.image?.startsWith("https://")
+      ? product.image
+      : `https://aethercart-backend.onrender.com${product.image}`;
+
   return (
     <div className="product-details-container">
       <div className="product-details-card">
         <div className="product-details-image-section">
           {product.image ? (
             <img
-              src={getImageUrl(product.image)}
+              src={imageUrl}
               alt={product.name}
               className="product-details-image"
             />

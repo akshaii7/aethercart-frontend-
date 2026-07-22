@@ -60,8 +60,8 @@ export default function Profile() {
     if (saved) {
       try {
         return JSON.parse(saved);
-      } catch (e) {
-        // ignore
+      } catch (error) {
+        console.error(error);
       }
     }
     return [
@@ -93,22 +93,45 @@ export default function Profile() {
   // Recent orders list
   const [recentOrders, setRecentOrders] = useState([]);
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      fetchProfile();
-      fetchOrders();
-    } else {
-      setLoading(false);
-    }
-  }, [isLoggedIn]);
 
-  const getProfileImageUrl = (data) => {
+
+  function getProfileImageUrl(data) {
     // Always pass through getImageUrl so Render /media/ URLs get rewritten to GitHub CDN
     const raw = data?.profile_image_url || data?.profile_image;
     return getImageUrl(raw);
+  }
+
+  const logoutWithoutAlert = () => {
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    localStorage.removeItem("username");
+    localStorage.removeItem("profileId");
+    localStorage.removeItem("profile_username");
+    localStorage.removeItem("profile_dob");
+    localStorage.removeItem("profile_gender");
+
+    setIsLoggedIn(false);
+    setIsEditing(false);
+    setProfileId(null);
+    setProfileImage(null);
+    setPreviewImage("");
+
+    setProfile({
+      name: "",
+      email: "",
+      phone: "",
+      address: "",
+      profile_image_url: "",
+      created_at: "",
+    });
   };
 
-  const fetchProfile = () => {
+  const logout = () => {
+    logoutWithoutAlert();
+    alert("Logged out successfully");
+  };
+
+  function fetchProfile() {
     const token = localStorage.getItem("access");
     const usernameFromStorage = localStorage.getItem("username");
 
@@ -123,7 +146,7 @@ export default function Profile() {
     api
       .get("accounts/profiles/")
       .then((response) => {
-        let currentProfile = null;
+        let currentProfile;
 
         if (Array.isArray(response.data)) {
           currentProfile =
@@ -182,7 +205,7 @@ export default function Profile() {
       });
   };
 
-  const fetchOrders = () => {
+  function fetchOrders() {
     api
       .get("orders/orders/")
       .then((res) => {
@@ -196,6 +219,17 @@ export default function Profile() {
         console.log("Activity/Orders Fetch Error:", err);
       });
   };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      fetchProfile();
+      fetchOrders();
+    } else {
+      setLoading(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoggedIn]);
 
   const handleChange = (e) => {
     if (!isEditing) return;
@@ -283,35 +317,6 @@ export default function Profile() {
     fetchProfile();
   };
 
-  const logoutWithoutAlert = () => {
-    localStorage.removeItem("access");
-    localStorage.removeItem("refresh");
-    localStorage.removeItem("username");
-    localStorage.removeItem("profileId");
-    localStorage.removeItem("profile_username");
-    localStorage.removeItem("profile_dob");
-    localStorage.removeItem("profile_gender");
-
-    setIsLoggedIn(false);
-    setIsEditing(false);
-    setProfileId(null);
-    setProfileImage(null);
-    setPreviewImage("");
-
-    setProfile({
-      name: "",
-      email: "",
-      phone: "",
-      address: "",
-      profile_image_url: "",
-      created_at: "",
-    });
-  };
-
-  const logout = () => {
-    logoutWithoutAlert();
-    alert("Logged out successfully");
-  };
 
   const handleLoginSuccess = () => {
     setShowAuthModal(false);
@@ -395,8 +400,8 @@ export default function Profile() {
       try {
         const date = new Date(profile.created_at);
         return `Joined on ${date.toLocaleString("default", { month: "short" })} ${date.getFullYear()}`;
-      } catch (e) {
-        // ignore
+      } catch (error) {
+        console.error(error);
       }
     }
     return "Joined on Jan 2024";
@@ -444,7 +449,8 @@ export default function Profile() {
       if (diffDays === 0) return "Today";
       if (diffDays === 1) return "Yesterday";
       return `${diffDays} days ago`;
-    } catch (e) {
+    } catch (error) {
+      console.error(error);
       return "Recently";
     }
   };

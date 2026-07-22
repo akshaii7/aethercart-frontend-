@@ -10,9 +10,7 @@ export default function Cart() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchCart();
-  }, []);
+
 
   const fetchCart = () => {
     api
@@ -39,6 +37,11 @@ export default function Cart() {
   const totalAmount = cartItems.reduce((sum, item) => {
     return sum + Number(item.total_price);
   }, 0);
+
+  useEffect(() => {
+    fetchCart();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
   <div className="cart-container">

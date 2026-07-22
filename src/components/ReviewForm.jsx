@@ -1,6 +1,51 @@
 import { useState } from "react";
 import api from "../api/axios";
 
+const formBox = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "12px",
+};
+
+const labelText = {
+  fontSize: "15px",
+  fontWeight: "800",
+  color: "#111",
+};
+
+const inputBox = {
+  width: "100%",
+  maxWidth: "420px",
+  padding: "12px 14px",
+  borderRadius: "12px",
+  border: "1px solid #ccc",
+  fontSize: "15px",
+  outline: "none",
+};
+
+const textArea = {
+  width: "100%",
+  maxWidth: "650px",
+  minHeight: "120px",
+  padding: "12px 14px",
+  borderRadius: "12px",
+  border: "1px solid #ccc",
+  fontSize: "15px",
+  outline: "none",
+  resize: "vertical",
+};
+
+const submitBtn = {
+  width: "170px",
+  padding: "13px 18px",
+  border: "none",
+  borderRadius: "16px",
+  background: "#111",
+  color: "#fff",
+  fontWeight: "900",
+  cursor: "pointer",
+};
+
 export default function ReviewForm({ productId, onReviewAdded }) {
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
@@ -73,48 +118,3 @@ export default function ReviewForm({ productId, onReviewAdded }) {
     </form>
   );
 }
-
-const formBox = {
-  display: "flex",
-  flexDirection: "column",
-  gap: "12px",
-};
-
-const labelText = {
-  fontSize: "15px",
-  fontWeight: "800",
-  color: "#111",
-};
-
-const inputBox = {
-  width: "100%",
-  maxWidth: "420px",
-  padding: "12px 14px",
-  borderRadius: "12px",
-  border: "1px solid #ccc",
-  fontSize: "15px",
-  outline: "none",
-};
-
-const textArea = {
-  width: "100%",
-  maxWidth: "650px",
-  minHeight: "120px",
-  padding: "12px 14px",
-  borderRadius: "12px",
-  border: "1px solid #ccc",
-  fontSize: "15px",
-  outline: "none",
-  resize: "vertical",
-};
-
-const submitBtn = {
-  width: "170px",
-  padding: "13px 18px",
-  border: "none",
-  borderRadius: "16px",
-  background: "#111",
-  color: "#fff",
-  fontWeight: "900",
-  cursor: "pointer",
-};

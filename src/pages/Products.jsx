@@ -20,6 +20,7 @@ export default function Products() {
   const itemsPerPage = 6;
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrentPage(1);
   }, [category, minPrice, maxPrice, sortOrder, search]);
 
